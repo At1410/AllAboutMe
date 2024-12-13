@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import profile from '../../Styles/profile.jpg';
 import { Box, Modal } from '@mui/material';
 import Grid from '@mui/material/Grid';
@@ -15,7 +15,7 @@ import BorderColorIcon from '@mui/icons-material/BorderColor';
 
 export default function Profile() {
 
-    const [open, setOpen] = React.useState(false);
+    const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
@@ -57,15 +57,15 @@ export default function Profile() {
                             alignItems="flex-start"
                             p={2}>
                             <Grid item xs={10}>
-                                <StylesTypography>Biệt danh: AT</StylesTypography>
-                                <StylesTypography>Họ và Tên: Lương Anh Thư</StylesTypography>
-                                <StylesTypography>Ngày sinh: 14/10/2003</StylesTypography>
-                                <StylesTypography>Giới tính: Nữ</StylesTypography>
-                                <StylesTypography>Công việc: IT</StylesTypography>
-                                <StylesTypography>Sở thích: Ngủ</StylesTypography>
-                                <StylesTypography>Phương châm sống: Còn sống là được</StylesTypography>
-                                <StylesTypography>Nơi muốn đến: Thanh Hoa</StylesTypography>
-                                <StylesTypography>Lời nhắn: Rán sống :))</StylesTypography>
+                                <StylesTypography>Biệt danh:</StylesTypography>
+                                <StylesTypography>Họ và Tên:</StylesTypography>
+                                <StylesTypography>Ngày sinh:</StylesTypography>
+                                <StylesTypography>Giới tính:</StylesTypography>
+                                <StylesTypography>Công việc:</StylesTypography>
+                                <StylesTypography>Sở thích:</StylesTypography>
+                                <StylesTypography>Phương châm sống:</StylesTypography>
+                                <StylesTypography>Nơi muốn đến:</StylesTypography>
+                                <StylesTypography>Lời nhắn:</StylesTypography>
                             </Grid>
 
                             <Grid

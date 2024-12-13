@@ -1,11 +1,11 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 
 import { useNavigate } from 'react-router-dom';
 import { Box, Typography, TextField, Button, styled, Paper } from '@mui/material';
 import { handleRegister } from './Register';
 
 
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 
@@ -34,24 +34,22 @@ export default function RegisterForm() {
 
     const emailRef = useRef(null);
     const passwordRef = useRef(null);
-    const [message, setMessage] = useState('');
-    const [error, setError] = useState('');
 
-    const handleSubmit = async (event, email, password) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        setMessage('');  // Xóa thông báo cũ
-        setError('');    // Xóa lỗi cũ
+
+        const email = emailRef.current.value;
+        const password = passwordRef.current.value;
 
         const result = await handleRegister(email, password);
 
         if (result.success) {
-            toast.success(result.message);  // Hiển thị thông báo thành công
-            navigate('/');  // Điều hướng về trang khác
+            toast.success(result.message);
+            navigate('/');
         } else {
-            toast.error(result.message);  // Hiển thị thông báo lỗi cho người dùng
+            toast.error(result.message);
         }
     };
-
 
     return (
         <div>
@@ -105,7 +103,6 @@ export default function RegisterForm() {
                         <Typography
                             variant='body'
                             sx={{
-                                marginLeft: 2,
                                 marginTop: 1,
                                 color: "#023e8a",
                                 cursor: "pointer",
@@ -117,9 +114,6 @@ export default function RegisterForm() {
                         >Bạn đã có tài khoản?</Typography>
                     </StyledForm>
                 </StyledPaper>
-
-                <ToastContainer />
-
             </Box>
         </div>
     );

@@ -1,12 +1,16 @@
 const mongoose = require('mongoose');
 
 const postSchema = mongoose.Schema({
-    title: {
+    titlePost: {
         type: String,
         required: true
     },
-    content: {
+    contentPost: {
         type: String,
+        required: true
+    },
+    imagePost: {
+        type: [String],
         required: true
     },
     author: {

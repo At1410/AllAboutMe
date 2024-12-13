@@ -4,6 +4,10 @@ import LoginForm from './Login/LoginForm';
 import Navbar from './Pages/Navbar';
 import PrivateRoute from './Pages/PrivateRoute';
 import RegisterForm from './Login/RegisterForm';
+import VerifyEmail from './routers/VerifyEmail';
+
+import './Styles/css.css';
+
 
 function App() {
   return (
@@ -11,6 +15,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LoginForm />} />
         <Route path="/register" element={<RegisterForm />} />
+        <Route path="/verifyEmail" element={<VerifyEmail />} />
         <Route path="/navbar" element={
           <PrivateRoute>
             <Navbar />

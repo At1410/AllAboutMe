@@ -1,0 +1,31 @@
+/* Toastify styles */
+.Toastify__toast-container {
+    top: 1rem;
+    left: 1rem;
+    transform: translate(0, 0);
+}
+
+.Toastify__toast {
+    width: 400px;
+    font-size: 16px;
+}
+
+@media (max-width: 600px) {
+    .Toastify__toast-container {
+        top: 1rem;
+        left: 1rem;
+    }
+
+    .Toastify__toast {
+        width: 80% !important;
+        font-size: 14px;
+    }
+
+    .Toastify__toast-body {
+        font-size: 14px;
+    }
+
+    .Toastify__progress-bar {
+        height: 3px;
+    }
+}

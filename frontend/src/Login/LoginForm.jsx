@@ -1,9 +1,12 @@
-import React from 'react';
+import React, { useRef } from 'react';
+
+import { handleLogin } from './Login';
 
 import { Box, Typography, TextField, Button, styled, Paper } from '@mui/material';
-
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function LoginForm() {
     const StyledForm = styled('form')({
@@ -24,21 +27,26 @@ export default function LoginForm() {
 
     const navigate = useNavigate();
 
-    const handleLogin = async (e) => {
-        e.preventDefault();
-        const email = e.target.elements.email.value;
-        const password = e.target.elements.password.value;
+    const emailRef = useRef(null);
+    const passwordRef = useRef(null);
 
-        // try {
-        //     const response = await axios.post('http://localhost:5000/users/login', { email, password });
-        //     if (response.data.token) {
-        //         localStorage.setItem('token', response.data.token);
-        //         Swal.fire('Đăng nhập thành công!', '', 'success');
-        //         navigate('/navbar');
-        //     }
-        // } catch (err) {
-        //     Swal.fire('Đăng nhập thất bại!', 'Email hoặc mật khẩu sai', 'error');
-        // }
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+
+        const email = emailRef.current.value;
+        const password = passwordRef.current.value;
+
+        const result = await handleLogin(email, password);
+
+        if (result.success) {
+            localStorage.setItem('token', result.token);
+
+            toast.success(result.message);
+            navigate('/navbar');
+        } else {
+            toast.error(result.message);
+        }
+
     };
 
     const handleGoToRegister = () => {
@@ -58,17 +66,16 @@ export default function LoginForm() {
                         Đăng Nhập
                     </Typography>
 
-                    <StyledForm onSubmit={handleLogin}>
+                    <StyledForm onSubmit={handleSubmit}>
                         <TextField
                             autoComplete="off"
                             label="Email đăng nhập"
                             variant="outlined"
                             fullWidth
                             margin="normal"
-                            required
                             name="email"
                             size='small'
-
+                            inputRef={emailRef}
                         />
                         <TextField
                             autoComplete="off"
@@ -77,10 +84,9 @@ export default function LoginForm() {
                             variant="outlined"
                             fullWidth
                             margin="normal"
-                            required
                             name="password"
                             size='small'
-
+                            inputRef={passwordRef}
                         />
 
                         <Button

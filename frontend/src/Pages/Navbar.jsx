@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -7,7 +8,8 @@ import { AppBar, Drawer, List, ListItem, ListItemIcon, ListItemText, Toolbar } f
 
 import ContactEmergencyIcon from '@mui/icons-material/ContactEmergency';
 import InsertEmoticonIcon from '@mui/icons-material/InsertEmoticon';
-import WorkIcon from '@mui/icons-material/Work';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import YardIcon from '@mui/icons-material/Yard';
 
 import MenuIcon from '@mui/icons-material/Menu';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
@@ -17,7 +19,8 @@ import Brightness7Icon from '@mui/icons-material/Brightness7';
 
 import Profile from './Profile/Profile';
 import Status from './Status/Status';
-import Work from './Work/Work';
+import Plan from './Plan/Plan';
+import { handleLogOut } from './Logout';
 
 const NAVIGATION = [
     {
@@ -31,9 +34,14 @@ const NAVIGATION = [
         icon: <InsertEmoticonIcon />,
     },
     {
-        segment: 'Công việc',
-        title: 'Công việc',
-        icon: <WorkIcon />,
+        segment: 'Kế hoạch',
+        title: 'Kế hoạch',
+        icon: <YardIcon />,
+    },
+    {
+        segment: 'Đăng xuất',
+        title: 'Đăng xuất',
+        icon: <ExitToAppIcon />,
     },
 ];
 
@@ -50,8 +58,8 @@ function DemoPageContent({ pathname }) {
             return <Profile />;
         case 'Tâm trạng':
             return <Status />;
-        case 'Công việc':
-            return <Work />;
+        case 'Kế hoạch':
+            return <Plan />;
         default:
             return null;
     }
@@ -61,8 +69,7 @@ DemoPageContent.propTypes = {
     pathname: PropTypes.string.isRequired,
 };
 
-function DashboardLayoutBasic(props) {
-    const { window } = props;
+function DashboardLayoutBasic() {
 
     const [pathname, setPathname] = React.useState('Hồ sơ');
     const [mode, setMode] = React.useState('light');
@@ -83,20 +90,16 @@ function DashboardLayoutBasic(props) {
         setDrawerOpen(!drawerOpen);
     };
 
+    const navigate = useNavigate();
+
     const handleNavigationClick = (segment) => {
-        setPathname(segment);
+        if (segment === 'Đăng xuất') {
+            handleLogOut(navigate);
+        } else {
+            setPathname(segment);
+        }
         setDrawerOpen(false);
     };
-
-    const router = React.useMemo(() => {
-        return {
-            pathname,
-            searchParams: new URLSearchParams(),
-            navigate: (path) => setPathname(String(path)),
-        };
-    }, [pathname]);
-
-    const demoWindow = window !== undefined ? window() : undefined;
 
     return (
         <ThemeProvider theme={theme}>
@@ -146,7 +149,6 @@ function DashboardLayoutBasic(props) {
                     <List>
                         {NAVIGATION.filter(item => item.segment).map((navItem) => (
                             <ListItem
-                                button
                                 key={navItem.segment}
                                 onClick={() => handleNavigationClick(navItem.segment)}
                                 sx={{

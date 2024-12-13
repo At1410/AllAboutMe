@@ -70,13 +70,11 @@ export default function Status() {
                             },
                         }}
                     >
-                        {/* Tùy chọn chỉnh sửa */}
                         <MenuItem onClick={handleClose}>
                             <EditNoteIcon sx={{ mr: 1 }} />
                             Chỉnh sửa
                         </MenuItem>
 
-                        {/* Tùy chọn xóa */}
                         <MenuItem onClick={handleClose}>
                             <DeleteOutlineIcon sx={{ mr: 1 }} />
                             Xóa
@@ -96,28 +94,6 @@ export default function Status() {
                         </StylesTypography>
                     </Item>
                 </Grid>
-                {/*<Grid item xs={1}>
-                    <Item sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        cursor: 'pointer',
-                    }}>
-                        <EditNoteIcon sx={{
-                            color: '#1d8bf8',
-                            '&:hover': {
-                                color: '#1976d2',
-                            }
-                        }} />
-                        <DeleteOutlineIcon sx={{
-                            color: '#d00000',
-                            '&:hover': {
-                                color: '#d32f2f',
-                            }
-                        }} />
-                    </Item>
-                </Grid>*/}
             </Grid>
         </div>
     )

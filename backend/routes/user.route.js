@@ -1,7 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const { createUser } = require('../controllers/user.controller');
-const { validateUser } = require('../middleware/validate.middleware');
 const { login, register } = require('../controllers/auth.controllers')
 
 /**
@@ -40,8 +38,6 @@ const { login, register } = require('../controllers/auth.controllers')
  *                   type: string
  *                   example: "Validation error: Invalid input data"
  */
-
-router.post('/', validateUser, createUser);
 router.post('/Login', login);
 router.post('/Register', register);
 

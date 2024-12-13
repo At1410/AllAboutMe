@@ -5,13 +5,13 @@ const authenticateToken = (req, res, next) => {
     const token = req.headers['authorization'];
 
     if (!token) {
-        return res.status(403).send('No token provided.');
+        return res.status(403).send('Không có token nào được cung cấp.');
     }
 
     // Xác thực token
     jwt.verify(token, secretKey, (err, decoded) => {
         if (err) {
-            return res.status(500).send('Failed to authenticate token.');
+            return res.status(500).send('Không thể xác thực token.');
         }
         req.userId = decoded.id;
         next();

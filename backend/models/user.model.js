@@ -22,7 +22,13 @@ const UserSchema = mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Post'
         }
-    ]
-});
+    ],
+    profile: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Profile'
+        }
+    ],
+}, { timestamps: true });
 
 module.exports = mongoose.model('User', UserSchema);

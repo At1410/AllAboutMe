@@ -2,10 +2,13 @@ const express = require('express');
 const cors = require('cors');
 
 const connectDB = require('./database/connectDB');
+
 const userRoutes = require('./routes/user.route');
-const authRoutes = require('./routes/auth.router');
 const sendEmailRoutes = require('./routes/email.router');
 const protectedRoutes = require('./routes/protected.router');
+
+const profileRoutes = require('./routes/profile.router');
+const postRoutes = require('./routes/post.route');
 
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
@@ -17,7 +20,6 @@ const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
-
 
 const swaggerOptions = {
     swaggerDefinition: {
@@ -49,9 +51,12 @@ app.get('/', (req, res) => {
 });
 
 app.use('/users', userRoutes);
-app.use('/auth', authRoutes);
 app.use('/email', sendEmailRoutes);
 app.use('/protected', protectedRoutes);
+
+app.use('/profiles', profileRoutes);
+app.use('/posts', postRoutes);
+
 
 app.listen(PORT, () => {
     console.log(`Server is running on port http://localhost:${PORT}`);

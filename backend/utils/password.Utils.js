@@ -16,7 +16,7 @@ const hashPassword = async (password) => {
         const hashedPassword = await bcrypt.hash(password, saltRounds);
         return hashedPassword;
     } catch (err) {
-        throw new Error('Error hashing password');
+        throw new Error('Lỗi sảy ra khi mã hóa mật khẩu');
     }
 };
 
@@ -26,7 +26,7 @@ const comparePassword = async (inputPassword, hashedPassword) => {
         const isMatch = await bcrypt.compare(inputPassword, hashedPassword);
         return isMatch;
     } catch (err) {
-        throw new Error('Error comparing password');
+        throw new Error('Lỗi sảy ra khi so sánh mật khẩu');
     }
 };
 

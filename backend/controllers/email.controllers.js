@@ -10,7 +10,7 @@ const sendEmail = async (req, res) => {
         }
         return res.json({
             status: 'err',
-            message: 'The email is required'
+            message: 'Email là bắt buộc'
         })
     } catch (error) {
         return res.json({

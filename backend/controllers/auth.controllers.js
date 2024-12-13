@@ -1,9 +1,15 @@
 const User = require('../models/user.model');
+
 const { createUserSchemaValidate } = require('../validates/user');
-const { hashPassword, comparePassword } = require('../utils/password.Utils');
+const { hashPassword, comparePassword, verifyToken } = require('../utils/password.Utils');
 
 const { generateVerificationToken } = require('../utils/password.Utils');
-const { sendEmailService } = require('../utils/sendEmailService');
+const { sendEmailService } = require('../utils/emailService');
+
+const jwt = require('jsonwebtoken');
+const secretKey = process.env.JWT_SECRET;
+
+require('dotenv').config();
 
 const register = async (req, res, next) => {
     const { email, password } = req.body;
@@ -27,7 +33,9 @@ const register = async (req, res, next) => {
 
         await sendEmailService(email, token);
 
-        res.status(201).json({ message: 'Đăng ký thành công! Vui lòng kiểm tra email để xác thực tài khoản.' });
+        res.status(201).json({
+            message: `Đăng ký thành công!\n
+             Vui lòng kiểm tra email để xác thực tài khoản.` });
     } catch (err) {
         res.status(500).json({ error: 'Có lỗi xảy ra', details: err.message });
     }
@@ -35,6 +43,10 @@ const register = async (req, res, next) => {
 
 const verifyEmail = async (req, res) => {
     const { token } = req.query;
+
+    if (!token) {
+        return res.status(400).json({ message: 'Token không tồn tại.' });
+    }
 
     try {
         const decoded = verifyToken(token);
@@ -44,25 +56,24 @@ const verifyEmail = async (req, res) => {
             return res.status(400).json({ message: 'Người dùng không tồn tại.' });
         }
 
-        if (user.isVerified) {
-            return res.status(400).json({ message: 'Tài khoản đã được xác thực trước đó.' });
-        }
-
-        // Kiểm tra thời gian đăng ký đã vượt quá 5 phút hay chưa
         const now = Date.now();
         const registrationTime = new Date(user.createdAt).getTime();
-        const timeElapsed = (now - registrationTime) / (1000 * 60); // Tính theo phút
+        const timeElapsed = (now - registrationTime) / (1000 * 60);
 
         if (timeElapsed > 5) {
-            // Nếu đã quá 5 phút mà chưa xác thực, xóa tài khoản
-            await User.deleteOne({ _id: user._id });
-            return res.status(400).json({ message: 'Liên kết xác thực đã hết hạn. Tài khoản của bạn đã bị xóa.' });
+            try {
+                console.log('Attempting to delete user with ID:', user._id);
+                await User.deleteOne({ _id: user._id });
+            } catch (deleteError) {
+                console.log('Lỗi khi xóa tài khoản:', deleteError);
+                return res.status(500).json({ message: 'Đã xảy ra lỗi trong quá trình xóa tài khoản.' });
+            }
         }
 
         user.isVerified = true;
         await user.save();
-
         res.status(200).json({ message: 'Xác thực email thành công.' });
+
     } catch (error) {
         res.status(400).json({ message: 'Liên kết xác thực không hợp lệ hoặc đã hết hạn.' });
     }
@@ -74,20 +85,26 @@ const login = async (req, res) => {
     try {
         const user = await User.findOne({ email });
         if (!user) {
-            return res.status(404).json({ error: 'User not found' });
+            return res.status(404).json({ error: 'Tài khoản không tồn tại!' });
+        }
+
+        if (!user.isVerified) {
+            return res.status(403).json({ error: 'Tài khoản chưa được xác thực. Vui lòng xác thực email của bạn.' });
         }
 
         const isMatch = await comparePassword(password, user.password);
         if (!isMatch) {
-            return res.status(400).json({ error: 'Invalid credentials' });
+            return res.status(400).json({ error: 'Mật khẩu đăng nhập không đúng!' });
         }
 
-        const token = jwt.sign({ id: user._id }, secretKey, { expiresIn: '1h' });
-        res.status(200).json({ message: 'Login successful', token });
+        const token = jwt.sign({ id: user._id }, secretKey, { expiresIn: '5m' });
+        res.status(200).json({ message: 'Đăng nhập thành công', token });
     } catch (err) {
-        res.status(500).json({ error: 'Error logging in user', details: err.message });
+        console.error("Lỗi đăng nhập:", err);
+        res.status(500).json({ error: 'Có lỗi xảy ra trong quá trình đăng nhập!', details: err.message });
     }
 };
+
 
 module.exports =
 {
